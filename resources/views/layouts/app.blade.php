@@ -25,6 +25,7 @@ semua halaman ======================================== --}}
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/style.css">
     {{-- ↑ Load font Nunito dari Bunny Fonts (alternatif Google Fonts) --}}
 
     <!-- Scripts & Styles -->
@@ -32,6 +33,86 @@ semua halaman ======================================== --}}
     CSS dan JS yang sudah di-compile oleh Vite - app.scss berisi Bootstrap dan
     custom styles - app.js berisi Bootstrap JS dan custom scripts --}}
   </head>
+  <style>
+      body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: #3498db;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .navbar {
+            margin-left: 250px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-card {
+            border-radius: 10px;
+            border: none;
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .table-actions button {
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        .badge-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        .sidebar-brand {
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                overflow: hidden;
+            }
+            .main-content, .navbar {
+                margin-left: 0;
+            }
+            .sidebar.show {
+                width: 250px;
+            }
+        }
+</style>
 
   <body>
     <div id="app">
