@@ -1,26 +1,34 @@
 <?php
 
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// admin
-
-
+/*
+|----------------------------
+| Public Controllers
+|----------------------------
+*/
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\GoogleController;
-
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\OrderController;
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Admin\DashboardController;
+/*
+|----------------------------
+| Admin Controllers
+|----------------------------
+*/
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
-use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\UserController;
+
 
 
 /*
@@ -117,13 +125,11 @@ Route::middleware('auth')->group(function () {
     | Profile
     */
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
     Route::patch('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.destroy');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
     Route::delete('/profile/google/unlink', [ProfileController::class, 'unlinkGoogle'])
         ->name('profile.google.unlink');
 });
@@ -146,8 +152,8 @@ Route::middleware(['auth', 'admin'])
         // CRUD Produk
         Route::resource('products', AdminProductController::class);
 
-        // CRUD Kategori
-        Route::resource('categories', AdminCategoryController::class);
+          // CRUD Kategori
+        Route::resource('categories', CategoryController::class); // <-- ganti di sini
 
         // Orders (sementara hanya index & show)
         Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
