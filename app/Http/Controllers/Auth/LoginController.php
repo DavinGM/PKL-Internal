@@ -10,11 +10,6 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    /**
-     * Default redirect setelah login.
-     */
-    protected $redirectTo = '/home';
-
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
@@ -22,19 +17,21 @@ class LoginController extends Controller
     }
 
     /**
-     * Redirect dinamis setelah login berhasil.
+     * Redirect setelah login berhasil
      */
-    protected function redirectTo(): string
+    protected function authenticated(Request $request, $user)
     {
-        return auth()->user()->role === 'admin'
-            ? route('admin.dashboard')
-            : route('home');
+        if ($user->role === 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return redirect()->route('home');
     }
 
     /**
-     * Validasi input login.
+     * Validasi input login
      */
-    protected function validateLogin(Request $request): void
+    protected function validateLogin(Request $request)
     {
         $request->validate(
             [

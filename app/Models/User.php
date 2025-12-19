@@ -9,14 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -28,21 +22,11 @@ class User extends Authenticatable
         'address',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -51,35 +35,28 @@ class User extends Authenticatable
         ];
     }
 
+
+
+
     // ==================== RELATIONSHIPS ====================
 
-    /**
-     * User memiliki satu keranjang aktif.
-     */
+
     public function cart()
     {
         return $this->hasOne(Cart::class);
     }
 
-    /**
-     * User memiliki banyak item wishlist.
-     */
     public function wishlists()
     {
         return $this->hasMany(Wishlist::class);
     }
 
-    /**
-     * User memiliki banyak pesanan.
-     */
-    public function orders()
+        public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-    /**
-     * Relasi many-to-many ke products melalui wishlists.
-     */
+    
     public function wishlistProducts()
     {
         return $this->belongsToMany(Product::class, 'wishlists')
@@ -88,25 +65,20 @@ class User extends Authenticatable
 
     // ==================== HELPER METHODS ====================
 
-    /**
-     * Cek apakah user adalah admin.
-     */
+    
+
     public function isAdmin(): bool
     {
         return $this->role === 'admin';
     }
 
-    /**
-     * Cek apakah user adalah customer.
-     */
+    
     public function isCustomer(): bool
     {
         return $this->role === 'customer';
     }
 
-    /**
-     * Cek apakah produk ada di wishlist user.
-     */
+    
     public function hasInWishlist(Product $product): bool
     {
         return $this->wishlists()
