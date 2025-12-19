@@ -15,8 +15,58 @@
                         </a>
                     </div>
 
+
+
+
+
                     {{-- Desktop Menu - Right Side --}}
                     <div class="hidden md:flex items-center gap-4">
+
+
+
+                        {{-- menu Kanan --}}
+                            <div class="relative" x-data="{ openMenu: false }">
+                                <button
+                                    @click="openMenu = !openMenu"
+                                    @click.away="openMenu = false"
+                                    class="flex items-center gap-1 px-4 py-2 text-gray-700 font-medium hover:text-blue-600 transition-colors"
+                                >
+                                    Menu
+                                    <svg class="w-4 h-4 transition-transform"
+                                        :class="{ 'rotate-180': openMenu }"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </button>
+
+                                <div
+                                    x-show="openMenu"
+                                    x-transition
+                                    class="absolute left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2"
+                                    style="display: none;"
+                                >
+                                    <a href="{{ route('home') }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                        🏠 Home
+                                    </a>
+
+                                    <a href="{{ route('catalog.index') }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                        🛍️ Semua Produk
+                                    </a>
+
+                                    <a href="{{ route('catalog.index', ['category' => 'elektronik']) }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                        📱 Elektronik
+                                    </a>
+
+                                    <a href="{{ route('catalog.index', ['category' => 'fashion']) }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                        👕 Fashion
+                                    </a>
+                                </div>
+                            </div>
                         @guest
                             {{-- Menu untuk Guest (Belum Login) --}}
                             @if (Route::has('login'))
@@ -97,14 +147,19 @@
                                     </a>
                                 @endif
                                     
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                                        <div class="flex items-center gap-2">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            </svg>
-                                            Settings
-                                        </div>
+                                    <a href="{{ route('cart.index') }}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center gap-2">
+                                                    🛒
+                                                    <span>Keranjang</span>
+                                                </div>
+                                                @if (cartCount() > 0)
+                                                    <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                                        {{ cartCount() }}
+                                                    </span>
+                                                @endif
+                                            </div>
                                     </a>
                                     
                                     <div class="border-t border-gray-100 my-1"></div>
@@ -130,6 +185,10 @@
                         @endguest
                     </div>
 
+
+
+
+
                     {{-- Mobile Menu Button --}}
                     <div class="flex items-center md:hidden">
                         <button 
@@ -144,6 +203,9 @@
                     </div>
                 </div>
             </div>
+
+
+
 
             {{-- Mobile Menu --}}
             <div 
@@ -182,10 +244,19 @@
                         </a>
 
                         
-                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
-                            Settings
-                        </a>
-                        
+                        <a href="{{ route('cart.index') }}"
+                            class="flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                                <div class="flex items-center gap-2">
+                                    🛒
+                                    <span>Keranjang</span>
+                                </div>
+
+                                @if (cartCount() > 0)
+                                    <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                        {{ cartCount() }}
+                                    </span>
+                                @endif
+                        </a>                        
                         <a 
                             href="{{ route('logout') }}"
                             onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();"
@@ -198,6 +269,7 @@
                             @csrf
                         </form>
                     @endguest
+                    
                 </div>
             </div>
         </nav>

@@ -10,13 +10,21 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title') - Admin Panel</title>
-
     {{-- Tailwind CSS & Vite --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
 </head>
 <body class="h-full flex">
+
+
+
+
+
+
+
+
+
 
     {{-- ===============================================
          Sidebar
@@ -26,58 +34,50 @@
         <div class="px-6 py-4 border-b border-blue-700">
             <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 font-bold text-lg">
                 <i class="bi bi-shop fs-4"></i>
-                Admin Panel
+                Panel Admin
             </a>
         </div>
 
+
+
+
+
+
+
         {{-- Navigation --}}
-        <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
-            {{-- Dashboard --}}
-            <a href="{{ route('admin.dashboard') }}"
-               class="flex items-center gap-2 px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.dashboard') ? 'bg-white/20 font-semibold' : '' }}">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
+      <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+    {{-- Dashboard --}}
+    <a href="{{ route('admin.dashboard') }}"
+       class="flex items-center gap-2 px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.dashboard') ? 'bg-white/20 font-semibold' : '' }}">
+        <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
 
-            {{-- Produk --}}
-            <a href="{{ route('admin.products.index') }}"
-               class="flex items-center gap-2 px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.products.*') ? 'bg-white/20 font-semibold' : '' }}">
-                <i class="bi bi-box-seam"></i> Produk
-            </a>
+    {{-- Produk --}}
+    <a href="{{ route('admin.products.index') }}"
+       class="flex items-center gap-2 px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.products.*') ? 'bg-white/20 font-semibold' : '' }}">
+        <i class="bi bi-box-seam"></i> Produk
+    </a>
 
-            {{-- Kategori --}}
-            <a href="{{ route('admin.categories.index') }}"
-               class="flex items-center gap-2 px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.categories.*') ? 'bg-white/20 font-semibold' : '' }}">
-                <i class="bi bi-folder"></i> Kategori
-            </a>
+    {{-- Kategori --}}
+    <a href="{{ route('admin.categories.index') }}"
+       class="flex items-center gap-2 px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.categories.*') ? 'bg-white/20 font-semibold' : '' }}">
+        <i class="bi bi-folder"></i> Kategori
+    </a>
 
-            {{-- Pesanan --}}
-            <a href="{{ route('admin.orders.index') }}"
-               class="flex items-center justify-between px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.orders.*') ? 'bg-white/20 font-semibold' : '' }}">
-                <span class="flex items-center gap-2">
-                    <i class="bi bi-receipt"></i> Pesanan
-                </span>
-                @php
-                    // Sebaiknya dikirim dari controller atau view composer
-                    $pendingCount = \App\Models\Order::where('status', 'pending')->where('payment_status', 'paid')->count();
-                @endphp
-                @if($pendingCount > 0)
-                    <span class="bg-yellow-400 text-black text-xs px-2 py-0.5 rounded">{{ $pendingCount }}</span>
-                @endif
-            </a>
+    {{-- Orders --}}
+    <a href="{{ route('admin.orders.index') }}"
+       class="flex items-center gap-2 px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.orders.*') ? 'bg-white/20 font-semibold' : '' }}">
+        <i class="bi bi-bag"></i> Pesanan
+    </a>
+</nav>
 
-            {{-- Pengguna --}}
-            <a href="{{ route('admin.users.index') }}"
-               class="flex items-center gap-2 px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.users.*') ? 'bg-white/20 font-semibold' : '' }}">
-                <i class="bi bi-people"></i> Pengguna
-            </a>
 
-            {{-- Laporan --}}
-            <div class="mt-4 text-xs uppercase text-blue-300 px-4">Laporan</div>
-            <a href="{{ route('admin.reports.sales') }}"
-               class="flex items-center gap-2 px-4 py-2 rounded hover:bg-white/10 {{ request()->routeIs('admin.reports.*') ? 'bg-white/20 font-semibold' : '' }}">
-                <i class="bi bi-graph-up"></i> Penjualan
-            </a>
-        </nav>
+
+
+
+
+
+
 
         {{-- User Info --}}
         <div class="px-6 py-4 border-t border-blue-700 flex items-center gap-3">
@@ -88,6 +88,15 @@
             </div>
         </div>
     </aside>
+
+
+
+
+
+
+
+
+
 
     {{-- ===============================================
          Main Content
@@ -109,10 +118,6 @@
             </div>
         </header>
 
-        {{-- Flash Messages --}}
-        <div class="px-6 pt-4">
-            @include('partials.flash-messages')
-        </div>
 
         {{-- Page Content --}}
         <main class="flex-1 p-6 bg-gray-50">

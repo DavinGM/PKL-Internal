@@ -64,21 +64,21 @@ class CatalogController extends Controller
         $products = $query->paginate(12)->withQueryString();
 
         //  Data sidebar: kategori aktif dengan produk
-        $categories = Category::query()
+       $categories = Category::query()
             ->active()
+            ->whereHas('activeProducts', function ($q) {
+                $q->where('is_active', true)
+                ->where('stock', '>', 0);
+            })
             ->withCount(['activeProducts'])
-            ->having('active_products_count', '>', 0)
             ->orderBy('name')
             ->get();
+
 
         // Kirim data ke view
         return view('catalog.index', compact('products', 'categories'));
     }
 
-
-
-
-    
 
     /**
      * Menampilkan halaman detail produk.
@@ -106,4 +106,35 @@ class CatalogController extends Controller
         // Kirim data ke view
         return view('catalog.show', compact('product', 'relatedProducts'));
     }
+
+    
+    /**
+ * Halaman Home – Produk unggulan per kategori
+ */
+    public function home()
+{
+    $categories = Category::query()
+        ->active()
+        ->with([
+            'activeProducts' => function ($query) {
+                $query->with('primaryImage')
+                      ->latest()
+                      ->limit(8);
+            }
+        ])
+        ->whereHas('activeProducts')
+        ->orderBy('name')
+        ->get();
+        
+    $latestProducts = Product::query()
+        ->active()
+        ->inStock()
+        ->with('primaryImage')
+        ->latest()
+        ->limit(8)
+        ->get();
+
+    return view('home', compact('categories', 'latestProducts'));
+}
+
 }

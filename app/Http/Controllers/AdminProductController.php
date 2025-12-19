@@ -1,64 +1,118 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class AdminProductController extends Controller
+class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Daftar produk (Admin)
      */
     public function index()
-    {
-        //
-    }
+{
+    $products = Product::with(['category', 'primaryImage'])
+        ->latest()
+        ->paginate(10);
+
+    return view('admin.products.index', compact('products'));
+}
+
 
     /**
-     * Show the form for creating a new resource.
+     * Form tambah produk
      */
     public function create()
     {
-        //
+        $categories = Category::active()->orderBy('name')->get();
+
+        return view('admin.products.create', compact('categories'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Simpan produk baru
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'category_id'     => 'required|exists:categories,id',
+            'name'            => 'required|string|max:255',
+            'description'     => 'nullable|string',
+            'price'           => 'required|numeric|min:0',
+            'discount_price'  => 'nullable|numeric|min:0|lt:price',
+            'stock'           => 'required|integer|min:0',
+            'weight'          => 'nullable|numeric|min:0',
+            'is_active'       => 'boolean',
+            'is_featured'     => 'boolean',
+        ]);
+
+        Product::create($validated);
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil ditambahkan');
     }
 
     /**
-     * Display the specified resource.
+     * Detail produk
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        //
+        $product->load(['category', 'images']);
+
+        return view('admin.products.show', compact('product'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Form edit produk
      */
-    public function edit(string $id)
+    public function edit(Product $product)
     {
-        //
+        $categories = Category::active()->orderBy('name')->get();
+
+        return view('admin.products.edit', compact('product', 'categories'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update produk
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Product $product)
     {
-        //
+        $validated = $request->validate([
+            'category_id'     => 'required|exists:categories,id',
+            'name'            => 'required|string|max:255',
+            'description'     => 'nullable|string',
+            'price'           => 'required|numeric|min:0',
+            'discount_price'  => 'nullable|numeric|min:0|lt:price',
+            'stock'           => 'required|integer|min:0',
+            'weight'          => 'nullable|numeric|min:0',
+            'is_active'       => 'boolean',
+            'is_featured'     => 'boolean',
+        ]);
+
+        $product->update($validated);
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil diperbarui');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Hapus produk
      */
-    public function destroy(string $id)
+    public function destroy(Product $product)
     {
-        //
+        DB::transaction(function () use ($product) {
+            $product->images()->delete();
+            $product->delete();
+        });
+
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Produk berhasil dihapus');
     }
 }

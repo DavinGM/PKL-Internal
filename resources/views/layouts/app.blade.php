@@ -32,12 +32,9 @@ FUNGSI: Template utama dengan Tailwind CSS
 <body class="bg-gray-50 min-h-screen flex flex-col" x-data="{ mobileMenuOpen: false, userDropdownOpen: false }">
     <div id="app" class="flex-1 flex flex-col">
         @include('partials.navbar')
-        @include('partials.flash-messages')
-
-        <main class="flex-1 py-6">
-            @yield('content')
+       <main class="flex-1">
+    @yield('content')
         </main>
     </div>
-
     @include('partials.footer')
 </body></html>

@@ -3,10 +3,8 @@
      FUNGSI: Dashboard admin dengan statistik & quick actions
      ================================================ --}}
 @extends('layouts.admin')
-
 @section('title', 'Dashboard')
 @section('page-title', 'Dashboard')
-
 @section('content')
     {{-- Stats Cards --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
@@ -97,17 +95,16 @@
                 </table>
             </div>
         </div>
-
         {{-- Quick Actions --}}
         <div class="bg-white shadow rounded-lg p-5 flex flex-col gap-3">
             <h5 class="font-semibold text-gray-700">Aksi Cepat</h5>
-            <a href="{{ route('admin.products.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center hover:bg-blue-700">
+            <a href="" class="bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center hover:bg-blue-700">
                 <i class="bi bi-plus-circle me-2"></i> Tambah Produk
             </a>
-            <a href="{{ route('admin.categories.index') }}" class="border border-blue-600 text-blue-600 px-4 py-2 rounded flex items-center justify-center hover:bg-blue-50">
+            <a href="" class="border border-blue-600 text-blue-600 px-4 py-2 rounded flex items-center justify-center hover:bg-blue-50">
                 <i class="bi bi-folder-plus me-2"></i> Kelola Kategori
             </a>
-            <a href="{{ route('admin.reports.sales') }}" class="border border-blue-600 text-blue-600 px-4 py-2 rounded flex items-center justify-center hover:bg-blue-50">
+            <a href="" class="border border-blue-600 text-blue-600 px-4 py-2 rounded flex items-center justify-center hover:bg-blue-50">
                 <i class="bi bi-file-earmark-bar-graph me-2"></i> Lihat Laporan
             </a>
         </div>

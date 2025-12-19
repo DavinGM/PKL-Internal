@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,22 +14,6 @@ class AdminController extends Controller
     {
         //
     }
-
-    public function dashboard()
-{
-    $stats = [
-        'total_revenue'  => 0,
-        'total_orders'   => 0,
-        'pending_orders' => 0,
-        'low_stock'      => 0,
-    ];
-
-    $recentOrders = collect(); // kosong tapi valid
-
-    return view('admin.dashboard', compact('stats', 'recentOrders'));
-}
-
-
 
     /**
      * Show the form for creating a new resource.
