@@ -54,6 +54,7 @@
                     ['route' => 'admin.products.index', 'icon' => 'bi-box-seam', 'label' => 'Produk', 'pattern' => 'admin.products.*'],
                     ['route' => 'admin.categories.index', 'icon' => 'bi-folder2-open', 'label' => 'Kategori', 'pattern' => 'admin.categories.*'],
                     ['route' => 'admin.orders.index', 'icon' => 'bi-receipt', 'label' => 'Pesanan', 'pattern' => 'admin.orders.*'],
+                    ['route'  => 'admin.users.index', 'icon' => 'bi-people', 'label' => 'Users', 'pattern' => 'admin.users.*'],
                 ];
             @endphp
 

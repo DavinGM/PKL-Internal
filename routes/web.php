@@ -159,9 +159,8 @@ Route::middleware(['auth', 'admin'])
         Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
         Route::get('orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
 
-                    // CRUD Users
+        // CRUD Users
             Route::resource('users', UserController::class);
-
             // Reports
             Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 
