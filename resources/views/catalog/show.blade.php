@@ -89,7 +89,7 @@
                 </div>
 
                 {{-- Action Form --}}
-                <form action="{{ route('cart.add') }}" method="POST" class="space-y-6 pt-6 border-t border-white/5">
+                <form action="{{ route('cart.store') }}" method="POST" class="space-y-6 pt-6 border-t border-white/5">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
 
@@ -98,7 +98,7 @@
                             <label class="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3">Select Quantity</label>
                             <div class="flex items-center bg-gray-900 border border-white/10 rounded-2xl p-1 w-full sm:w-40 justify-between">
                                 <button type="button" onclick="decrementQty()" class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors text-xl font-bold">−</button>
-                                <input id="quantity" name="quantity" type="number" min="1" max="{{ $product->stock }}" value="1" 
+                                <input id="quantity" name="qty" type="number" min="1" max="{{ $product->stock }}" value="1" 
                                        class="bg-transparent border-none text-center w-full focus:ring-0 font-black text-lg">
                                 <button type="button" onclick="incrementQty()" class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/5 transition-colors text-xl font-bold">+</button>
                             </div>
@@ -111,7 +111,7 @@
                                 <div class="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 opacity-100 group-hover:animate-pulse"></div>
                                 <div class="relative flex items-center justify-center gap-3 bg-gray-950 h-full w-full rounded-[15px] transition-all group-hover:bg-transparent">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 11-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                                    <span class="font-black uppercase tracking-[0.2em] text-sm">Add To System</span>
+                                    <span class="font-black uppercase tracking-[0.2em] text-sm">Keranjang</span>
                                 </div>
                             </button>
                         </div>
@@ -120,7 +120,7 @@
 
                 {{-- Description & Details --}}
                 <div class="space-y-4 pt-6">
-                    <h3 class="text-xs font-bold uppercase tracking-[0.3em] text-gray-500 border-b border-white/5 pb-2">Technical Description</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-[0.3em] text-gray-500 border-b border-white/5 pb-2">Deskripsi</h3>
                     <div class="text-gray-400 text-sm leading-relaxed prose prose-invert max-w-none">
                         {!! nl2br(e($product->description)) !!}
                     </div>
@@ -129,7 +129,7 @@
                 {{-- Specs Grid --}}
                 <div class="grid grid-cols-2 gap-4">
                     <div class="p-4 rounded-2xl bg-white/5 border border-white/5 text-center">
-                        <div class="text-[10px] uppercase font-bold text-gray-500 tracking-widest mb-1">Weight</div>
+                        <div class="text-[10px] uppercase font-bold text-gray-500 tracking-widest mb-1">Ukuran</div>
                         <div class="text-white font-black">{{ $product->weight }} <span class="text-gray-500 text-xs">GR</span></div>
                     </div>
                     <div class="p-4 rounded-2xl bg-white/5 border border-white/5 text-center">

@@ -147,20 +147,20 @@
                                     </a>
                                 @endif
                                     
-                                    <a href="{{ route('cart.index') }}"
-                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                                            <div class="flex items-center justify-between">
-                                                <div class="flex items-center gap-2">
-                                                    🛒
-                                                    <span>Keranjang</span>
-                                                </div>
-                                                @if (cartCount() > 0)
-                                                    <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                                                        {{ cartCount() }}
-                                                    </span>
-                                                @endif
-                                            </div>
-                                    </a>
+                                <a href="{{ route('cart.index') }}" class="block px-4 py-2 text-sm">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            🛒 <span>Keranjang</span>
+                                        </div>
+
+                                        @if ($cartCount > 0)
+                                            <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                                {{ $cartCount }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                </a>
+
                                     
                                     <div class="border-t border-gray-100 my-1"></div>
                                     

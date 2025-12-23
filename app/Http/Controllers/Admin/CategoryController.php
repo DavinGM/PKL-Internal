@@ -8,16 +8,24 @@ use App\Models\Category;
 
 class CategoryController extends Controller
 {
+
     public function index()
     {
         $categories = Category::paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
 
+
+
+
     public function create()
     {
         return view('admin.categories.create');
     }
+
+
+
+
 
     public function store(Request $request)
     {
@@ -31,6 +39,11 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')
                          ->with('success', 'Kategori berhasil ditambahkan.');
     }
+
+
+
+
+
 
     public function edit(Category $category)
     {
@@ -50,6 +63,10 @@ class CategoryController extends Controller
                          ->with('success', 'Kategori berhasil diperbarui.');
     }
 
+
+
+
+    
     public function destroy(Category $category)
     {
         $category->delete();

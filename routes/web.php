@@ -102,10 +102,14 @@ Route::middleware('auth')->group(function () {
     /*
     | Cart
     */
-    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::patch('/cart/{productId}', [CartController::class, 'update'])->name('cart.update');
-    Route::delete('/cart/{productId}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::prefix('cart')->name('cart.')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('index');
+    Route::post('/', [CartController::class, 'store'])->name('store');
+    Route::patch('/{itemId}', [CartController::class, 'update'])->name('update');
+    Route::delete('/{itemId}', [CartController::class, 'destroy'])->name('destroy');
+
+});
+
 
     /*
     | Checkout & Order
@@ -162,6 +166,6 @@ Route::middleware(['auth', 'admin'])
         // CRUD Users
             Route::resource('users', UserController::class);
             // Reports
-            Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+            // Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
 
 });

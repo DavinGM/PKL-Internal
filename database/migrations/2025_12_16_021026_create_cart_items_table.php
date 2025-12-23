@@ -7,25 +7,27 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
-    {
-        Schema::create('cart_items', function (Blueprint $table) {
-            $table->id();
+        public function up(): void
+        {
+            Schema::create('cart_items', function (Blueprint $table) {
+        $table->id();
 
-            $table->foreignId('cart_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+        $table->foreignId('cart_id')
+            ->constrained()
+            ->cascadeOnDelete();
 
-            $table->foreignId('product_id')
-                  ->constrained()
-                  ->cascadeOnDelete();
+        $table->foreignId('product_id')
+            ->constrained()
+            ->cascadeOnDelete();
 
-            $table->integer('quantity')->default(1);
+        $table->integer('quantity')->default(1);
 
-            $table->timestamps();
+        $table->decimal('price', 15, 2); // snapshot harga
 
-            $table->unique(['cart_id', 'product_id']);
-        });
+        $table->timestamps();
+
+        $table->unique(['cart_id', 'product_id']);
+});
     }
 
     public function down(): void

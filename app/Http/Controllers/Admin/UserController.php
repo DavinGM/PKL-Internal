@@ -68,7 +68,7 @@ class UserController extends Controller
             'email'   => 'required|email|unique:users,email,' . $user->id,
             'role'    => 'required|in:admin,customer',
             'phone'   => 'nullable|string|max:20',
-            'address' => 'nullable|string',
+            'address' => 'nullable|string', 
         ]);
 
         if ($request->filled('password')) {

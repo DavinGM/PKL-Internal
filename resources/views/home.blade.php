@@ -136,7 +136,7 @@
 
 
 {{-- ==================== KATEGORI ==================== --}}
-<section class="py-20 bg-gradient-to-b from-gray-900 via-purple-900/50 to-gray-900 relative overflow-hidden">
+<section class="py-20 bg-gradient-to-b from-gray-900 via-purple-900/50 to-gray-900 relative overflow-hidden">   
     {{-- Background Pattern --}}
     <div class="absolute inset-0 bg-[linear-gradient(rgba(139,92,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(139,92,246,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
     
@@ -180,7 +180,7 @@
                                 <div class="absolute inset-0 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-300"></div>
                                 
                                 <div class="relative w-20 h-20 rounded-full overflow-hidden ring-4 ring-white/20 group-hover:ring-purple-400/60 transition-all duration-300">
-                                    <img src="{{ $category->image_url }}"
+                                    <img src="{{ $category->image }}"
                                          alt="{{ $category->name }}"
                                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                 </div>

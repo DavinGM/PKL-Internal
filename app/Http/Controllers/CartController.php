@@ -3,88 +3,77 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Services\CartService;
 use Illuminate\Http\Request;
+use Exception;
 
 class CartController extends Controller
 {
-    /**
-     * Tampilkan isi keranjang
-     */
+    protected CartService $cart;
+
+
+
+    public function __construct(CartService $cart)
+    {
+        $this->cart = $cart;
+    }
+
+
+
+
     public function index()
     {
-        $cart = session()->get('cart', []);
-
-        $total = collect($cart)->sum(function ($item) {
-            return $item['product']->display_price * $item['qty'];
-        });
-
-        return view('cart.index', compact('cart', 'total'));
+        return view('cart.index', [
+            'cart'  => $this->cart->getCart(),
+            'total' => $this->cart->total(),
+        ]);
     }
 
-    /**
-     * Tambah produk ke keranjang
-     */
-    public function add(Request $request)
-    {
-        $request->validate([
-            'product_id' => ['required', 'exists:products,id'],
-            'quantity'   => ['required', 'integer', 'min:1'],
-        ]);
 
-        $product = Product::active()->inStock()->findOrFail($request->product_id);
-        $cart = session()->get('cart', []);
 
-        $qty = min($request->quantity, $product->stock);
+   public function store(Request $request)
+{
+    $data = $request->validate([
+        'product_id' => ['required', 'exists:products,id'],
+        'qty'        => ['required', 'integer', 'min:1'],
+    ]);
 
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['qty'] += $qty;
-        } else {
-            $cart[$product->id] = [
-                'product' => $product,
-                'qty'     => $qty,
-            ];
-        }
+    try {
+        $product = Product::active()->inStock()
+            ->findOrFail($data['product_id']);
 
-        session()->put('cart', $cart);
+        $this->cart->add($product, $data['qty']);
 
-        return redirect()->route('cart.index')
+        return redirect()
+            ->route('cart.index')
             ->with('success', 'Produk ditambahkan ke keranjang.');
+    } catch (Exception $e) {
+        return back()->withErrors($e->getMessage());
     }
+}
 
-    /**
-     * Update jumlah produk
-     */
-    public function update(Request $request, $productId)
+
+
+    public function update(Request $request, int $itemId)
     {
-        $request->validate([
-            'quantity' => ['required', 'integer', 'min:1'],
+        $data = $request->validate([
+            'qty' => ['required', 'integer', 'min:1'],
         ]);
 
-        $cart = session()->get('cart', []);
-
-        if (! isset($cart[$productId])) {
+        try {
+            $this->cart->update($itemId, $data['qty']);
             return back();
+        } catch (Exception $e) {
+            return back()->withErrors($e->getMessage());
         }
-
-        $product = $cart[$productId]['product'];
-        $cart[$productId]['qty'] = min($request->quantity, $product->stock);
-
-        session()->put('cart', $cart);
-
-        return back();
     }
 
-    /**
-     * Hapus produk dari keranjang
-     */
-    public function remove($productId)
+
+
+
+    public function destroy(int $itemId)
     {
-        $cart = session()->get('cart', []);
-
-        unset($cart[$productId]);
-
-        session()->put('cart', $cart);
-
-        return back()->with('success', 'Produk dihapus dari keranjang.');
+        $this->cart->remove($itemId);
+        return back()->with('success', 'Item dihapus.');
     }
 }
