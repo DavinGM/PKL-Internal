@@ -38,4 +38,29 @@ FUNGSI: Template utama dengan Tailwind CSS
         </main>
     </div>
     @include('partials.footer')
+    <script>
+function toggleWishlist(productId) {
+    fetch(`/wishlist/toggle/${productId}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        const btn = document.querySelector('.wishlist-btn-' + productId + ' i');
+
+        if (data.added) {
+            btn.classList.remove('bi-heart');
+            btn.classList.add('bi-heart-fill', 'text-red-500');
+        } else {
+            btn.classList.remove('bi-heart-fill', 'text-red-500');
+            btn.classList.add('bi-heart');
+        }
+    })
+    .catch(err => console.error(err));
+}
+</script>
+
 </body></html>

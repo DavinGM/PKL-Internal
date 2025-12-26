@@ -23,7 +23,6 @@ class Product extends Model
         'is_active',
         'is_featured',
     ];
-
     protected $casts = [
         'price' => 'decimal:2',
         'discount_price' => 'decimal:2',
@@ -51,10 +50,6 @@ class Product extends Model
             }
         });
     }
-
-
-
-
 
 
 
@@ -89,9 +84,6 @@ class Product extends Model
 
 
 
-
-
-    
     // ACCESSORS
     public function getDisplayPriceAttribute(): float
     {
@@ -183,6 +175,16 @@ class Product extends Model
     public function scopeOnSale($query)
     {
         return $query->whereNotNull('discount_price')
-                     ->whereColumn('discount_price', '<', 'price');
+                        ->whereColumn('discount_price', '<', 'price');
     }
+
+
+
+
+     // app/Models/Product.php
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
 }

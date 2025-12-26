@@ -8,61 +8,109 @@ use Illuminate\Support\Facades\Auth;
 
 class CartService
 {
-
-    public function getCart(): Cart
+    /**
+     * Mendapatkan data Cart milik user yang sedang login.
+     * Menggunakan firstOrCreate agar selalu mengembalikan object Cart.
+     */
+    protected function getOrCreateCart()
     {
-        return Cart::firstOrCreate([
-            'user_id'    => Auth::id(),
-            'session_id' => Auth::check() ? null : session()->getId(),
-        ]);
+        return Cart::firstOrCreate(['user_id' => Auth::id()]);
     }
 
-    public function add(Product $product, int $qty): void
+    /**
+     * Mendapatkan cart dengan relasi lengkap untuk ditampilkan di view.
+     */
+    public function getCart()
     {
-        $cart = $this->getCart();
-
-        $item = $cart->items()->firstOrCreate(
-            ['product_id' => $product->id],
-            ['price' => $product->display_price]
-        );
-
-        $item->quantity = min(
-            $item->quantity + $qty,
-            $product->stock
-        );
-
-        $item->save();
+        return Cart::with(['items.product.images'])
+            ->where('user_id', Auth::id())
+            ->first();
     }
 
-    public function update(int $itemId, int $qty): void
+    /**
+     * Menghitung total belanja.
+     */
+    public function total()
     {
         $cart = $this->getCart();
+        
+        if (!$cart || $cart->items->isEmpty()) {
+            return 0;
+        }
+
+        return $cart->items->sum(function ($item) {
+            // Gunakan price yang tersimpan di table cart_items
+            return $item->price * $item->quantity;
+        });
+    }
+
+    /**
+     * Badge jumlah item untuk Navbar.
+     */
+    public function count()
+    {
+        $cart = $this->getCart();
+        return $cart ? (int) $cart->items->sum('quantity') : 0;
+    }
+
+    /**
+     * Menambahkan produk ke keranjang.
+     * SOLUSI ERROR PRICE: Menambahkan 'price' saat create.
+     */
+    public function add(Product $product, int $qty)
+    {
+        $cart = $this->getOrCreateCart();
+
+        // Cari apakah produk sudah ada di item keranjang
+        $item = $cart->items()->where('product_id', $product->id)->first();
+
+        // Ambil harga saat ini (Gunakan display_price jika ada logika diskon)
+        $currentPrice = $product->display_price ?? $product->price;
+
+        if ($item) {
+            // Jika sudah ada, update quantity dan update harga ke harga terbaru
+            $item->update([
+                'quantity' => $item->quantity + $qty,
+                'price'    => $currentPrice 
+            ]);
+        } else {
+            // JIKA BARU: Pastikan 'price' diisi agar tidak error NOT NULL
+            $cart->items()->create([
+                'product_id' => $product->id,
+                'quantity'   => $qty,
+                'price'      => $currentPrice // FIX ERROR DI SINI
+            ]);
+        }
+        
+        return $cart;
+    }
+
+    /**
+     * Memperbarui jumlah item.
+     */
+    public function update(int $itemId, int $qty)
+    {
+        $cart = $this->getCart();
+        if (!$cart) return;
+
         $item = $cart->items()->findOrFail($itemId);
+        
+        // Validasi stok produk
+        if ($qty > $item->product->stock) {
+            throw new \Exception("Stok tidak mencukupi. Tersisa: " . $item->product->stock);
+        }
 
-        $item->quantity = $qty;
-        $item->save();
+        $item->update(['quantity' => $qty]);
     }
 
-    public function remove(int $itemId): void
+    /**
+     * Menghapus item.
+     */
+    public function remove(int $itemId)
     {
-        $this->getCart()->items()->where('id', $itemId)->delete();
+        $cart = $this->getCart();
+        if ($cart) {
+            $cart->items()->where('id', $itemId)->delete();
+        }
     }
-
-    public function total(): int
-    {
-        return $this->getCart()
-            ->items
-            ->sum(fn ($i) => $i->price * $i->quantity);
-    }
-
-    public function count(): int
-{
-    return $this->getCart()
-        ->items
-        ->sum('quantity');
-}
-    
-
-
-
 }

@@ -3,7 +3,6 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
 /*
 |----------------------------
 | Public Controllers
@@ -112,13 +111,29 @@ Route::middleware('auth')->group(function () {
 
 
     /*
-    | Checkout & Order
-    */
-    // Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
-    // Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+|--------------------------------------------------------------------------
+| AUTHENTICATED USER ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
 
-    // Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-    // Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    // ... (kode dashboard dan cart tetap sama)
+
+    /*
+    | Checkout & Order (AKTIFKAN DI SINI)
+    |--------------------------------------------------------------------------
+    */
+    // Route untuk menampilkan halaman form alamat (Hari 11)
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    // Route untuk memproses pembuatan order ke database (Hari 11)
+    Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+    // Route untuk melihat riwayat pesanan (Penting untuk setelah checkout sukses)
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+
+    // ... (kode profile dan wishlist tetap sama)
+});
+
 
     /*
     | Wishlist
@@ -167,5 +182,15 @@ Route::middleware(['auth', 'admin'])
             Route::resource('users', UserController::class);
             // Reports
             // Route::get('reports', [ReportController::class, 'index'])->name('reports.index');
+
+});
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/wishlist', [WishlistController::class, 'index'])
+        ->name('wishlist.index');
+
+    Route::post('/wishlist/toggle/{product}', [WishlistController::class, 'toggle'])
+        ->name('wishlist.toggle');
 
 });

@@ -46,10 +46,7 @@ class User extends Authenticatable
         return $this->hasOne(Cart::class);
     }
 
-    public function wishlists()
-    {
-        return $this->hasMany(Wishlist::class);
-    }
+  
 
         public function orders()
     {
@@ -85,4 +82,12 @@ class User extends Authenticatable
                     ->where('product_id', $product->id)
                     ->exists();
     }
+
+    // app/Models/User.php
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
 }

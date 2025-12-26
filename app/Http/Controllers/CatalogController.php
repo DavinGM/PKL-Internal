@@ -2,40 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Category;
+use app\Models\Wishlist;
 use Illuminate\Http\Request;
 
 class CatalogController extends Controller
 {
 
-    public function home()
-{
-    // ======================
-    // KATEGORI AKTIF + JUMLAH PRODUK
-    // ======================
-    $categories = Category::query()
-        ->active()
-        ->whereHas('activeProducts', function ($q) {
-            $q->where('is_active', true)
-              ->where('stock', '>', 0);
-        })
-        ->withCount(['activeProducts'])
-        ->orderBy('name')
-        ->get();
+        public function home()
+    {
+        // ======================
+        // KATEGORI AKTIF + JUMLAH PRODUK
+        // ======================
+        $categories = Category::query()
+            ->active()
+            ->whereHas('activeProducts', function ($q) {
+                $q->where('is_active', true)
+                ->where('stock', '>', 0);
+            })
+            ->withCount(['activeProducts'])
+            ->orderBy('name')
+            ->get();
 
-    // ======================
-    // PRODUK TERBARU
-    // ======================
-    $latestProducts = Product::query()
-        ->active()
-        ->inStock()
-        ->with('primaryImage')
-        ->latest()
-        ->limit(8)
-        ->get();
+        // ======================
+        // PRODUK TERBARU
+        // ======================
+        $latestProducts = Product::query()
+            ->active()
+            ->inStock()
+            ->with('primaryImage')
+            ->latest()
+            ->limit(8)
+            ->get();
 
-    return view('home', compact('categories', 'latestProducts'));
+        $wishlistProductIds = [];
+
+        if (Auth::check()) {
+            $wishlistProductIds = Auth::user()
+                ->wishlists()
+                ->pluck('product_id')
+                ->toArray();
+        }
+
+
+        return view('home', compact(
+        'categories',
+        'latestProducts',
+        'wishlistProductIds'
+    ));
+
 }
 
 
@@ -90,23 +107,47 @@ class CatalogController extends Controller
             ->orderBy('name')
             ->get();
 
+        $wishlistProductIds = [];
+
+        if (Auth::check()) {
+            $wishlistProductIds = Auth::user()
+                ->wishlists()
+                ->pluck('product_id')
+                ->toArray();
+        }
+
         return view('catalog.index', compact(
-            'products',
-            'categories',
-            'sort'
-        ));
+        'products',
+        'categories',
+        'sort',
+        'wishlistProductIds'   
+    ));
     }
 
 
-    public function show($slug)
-{
-    $product = Product::with(['category', 'images'])
-        ->where('slug', $slug)
-        ->where('is_active', true)
-        ->where('stock', '>', 0)
-        ->firstOrFail();
+        public function show($slug)
+    {
+        $product = Product::with(['category', 'images'])
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->where('stock', '>', 0)
+            ->firstOrFail();
 
-    return view('catalog.show', compact('product'));
-}
+        $wishlistProductIds = [];
+
+        if (Auth::check()) {
+            $wishlistProductIds = Auth::user()
+                ->wishlists()
+                ->pluck('product_id')
+                ->toArray();
+        }
+
+
+            return view('catalog.show', compact(
+            'product',
+            'wishlistProductIds'
+        ));
+
+    }
 
 }

@@ -15,10 +15,6 @@
                         </a>
                     </div>
 
-
-
-
-
                     {{-- Desktop Menu - Right Side --}}
                     <div class="hidden md:flex items-center gap-4">
 
@@ -65,6 +61,12 @@
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                                         👕 Fashion
                                     </a>
+
+                                    <a href="{{ route('wishlist.index') }}"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                            Wishlist
+                                    </a>
+
                                 </div>
                             </div>
                         @guest
@@ -176,6 +178,7 @@
                                             Logout
                                         </div>
                                     </a>
+                                    
                                     
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
                                         @csrf
